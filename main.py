@@ -18,7 +18,7 @@ def init_of_database():
 def f():
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
-    cursor.execute("SELECT id , title, completed timestamp FROM tasks")
+    cursor.execute("SELECT id , title, completed ,timestamp FROM tasks")
     tasks=cursor.fetchall()
     conn.close()
     return tasks
@@ -64,7 +64,7 @@ def display():
                 status = "Done Boss"
             else:
                status = "Not done"
-            print(f"{task[0]}. {task[1]} - {status} - (Added on: {task[3]})")
+            print(f"{task[0]}. {task[1]} - {status} - Added on: {task[3]}")
 def add():
     y = int(input("Enter how many task you want to add? "))
     for i in range(y):
