@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 db_file = "tasks.db"
 
 def init_of_database():
@@ -8,7 +9,8 @@ def init_of_database():
     CREATE TABLE IF NOT EXISTS tasks(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    completed INTEGER DEFAULT 0
+    completed INTEGER DEFAULT 0,
+    timestamp TEXT DEFAULT CURRENT_TIMESTAMP
     )
     """)
     conn.commit()
@@ -16,14 +18,15 @@ def init_of_database():
 def f():
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
-    cursor.execute("SELECT id , title, completed FROM tasks")
+    cursor.execute("SELECT id , title, completed timestamp FROM tasks")
     tasks=cursor.fetchall()
     conn.close()
     return tasks
 def insert(title):
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tasks (title, completed) VALUES (?, ?)", (title, 0))
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute("INSERT INTO tasks (title, completed,timestamp) VALUES (?,?, ?)", (title, 0, current_time))
     conn.commit()
     conn.close()
 def update(task_id):
@@ -61,7 +64,7 @@ def display():
                 status = "Done Boss"
             else:
                status = "Not done"
-            print(f"{task[0]}. {task[1]} - {status}")
+            print(f"{task[0]}. {task[1]} - {status} - (Added on: {task[3]})")
 def add():
     y = int(input("Enter how many task you want to add? "))
     for i in range(y):
